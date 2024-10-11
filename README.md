@@ -16,13 +16,13 @@ If the watermark is an overlay, it can potentially be removed using PDF editing 
 ## ❌ Remove the watermark
 Let's review some methods to remove the watermark.
 
-### 🛠️ Using automated tools
+### 🛠️ [1/3] Using automated tools
 You should check if the following does the job:
 ```[bash]
 $ pdfcpu watermark remove [-p(ages) selectedPages] inFile [outFile]
 ```
 
-### 🎨 Replacing the colour of the watermark 
+### 🎨 [2/3] Replacing the colour of the watermark 
 One easy-to-go strategy is:
 1. Rasterize the PDF into *JPG* or *PNG* images, using one of the many online/offline tools,
 2. Sample the watermark colour with `Paint`, `GIMP` or similar tools.
@@ -33,7 +33,7 @@ Although this is a very simple technique, **it only works if the watermark is pl
 
 Another drawback of this method is that we lose information when rasterising the PDF in point 1. This means, for example, that **the text in the resulting PDF can no longer be selected or copied**.
 
-### 🔧 The manual approach
+### 🔧 [3/3] The manual approach
 If automated tools don't remove the watermark, you have to manually analyse the PDF content and identify the *object* responsible for the watermark.
 
 #### 📂 [Optional] Uncompress the PDF
