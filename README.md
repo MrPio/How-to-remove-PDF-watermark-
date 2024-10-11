@@ -62,6 +62,21 @@ This part is trial and error, but we are not going to go blind as there are tric
 2. The string "watermark" or the actual watermark content may appear in the uncompressed version of the PDF,
 3. A watermark usually has a wide width and a high height. In my case, the entries `/Width 720` and `/Height 540` identified the watermark.
 
-TODO
+In my case, the culprit was the following:
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b46b46e4-cbe0-419b-8228-68b4b66405a2" width="650rem"/>
+</p>
 
 In my experience, if you try to edit the PDF content with text editors like *VSC*, *nano*, *Mousepad* etc..., the file gets corrupted, probably due to the wrong text encoding the editor inferred on a binary file like the PDF. The only text editor I found that doesn't change the file encoding was *Vim*.
+
+### Batch clean multiple PDF files
+
+You could either use `Vim`, `sed` or related tools to manually patch the PDFs, or use a Python script to automate the job.
+
+I have attached two scripts to this repository:
+- [**cleaner.py**](/cleaner.py) - Patch all the PDF files in the CWD. **Before launching the script be sure to have placed the entries for your watermark found in the previous step inside the `watermark_features` list**. This script uses the regular expression `<<[^>]+>>` to identify all the PDF dictionaries, i.e. object arguments, and filter them by keeping only those having all the watermark features.
+- [**unlocker.py**](/unlocker.py) - Unlock all the permission for all the PDF files in the CWD. This requires `pdftk` to work.
+
+### Test the result
+If you've got this far, you should see some results. However, as in my case, different PDF files had slightly different watermark objects, so I reran the script several times with different `watermark_features` values for those files.
+I also happened to find a file where the watermark object couldn't be removed without corrupting the whole file. What I did was to set the `/Width` property to `0` instead of removing the object.
