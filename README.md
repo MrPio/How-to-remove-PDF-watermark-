@@ -16,13 +16,13 @@ If the watermark is an overlay, it can potentially be removed using PDF editing 
 ## ❌ Remove the watermark
 Let's review some methods to remove the watermark.
 
-### Using automated tools
+### 🛠️ Using automated tools
 You should check if the following does the job:
 ```[bash]
 $ pdfcpu watermark remove [-p(ages) selectedPages] inFile [outFile]
 ```
 
-### Replacing the colour of the watermark 
+### 🎨 Replacing the colour of the watermark 
 One easy-to-go strategy is:
 1. Rasterize the PDF into *JPG* or *PNG* images, using one of the many online/offline tools,
 2. Sample the watermark colour with `Paint`, `GIMP` or similar tools.
@@ -33,16 +33,16 @@ Although this is a very simple technique, **it only works if the watermark is pl
 
 Another drawback of this method is that we lose information when rasterising the PDF in point 1. This means, for example, that **the text in the resulting PDF can no longer be selected or copied**.
 
-### The manual approach
+### 🔧 The manual approach
 If automated tools don't remove the watermark, you have to manually analyse the PDF content and identify the *object* responsible for the watermark.
 
-### [Optional] Uncompress the PDF
+#### 📂 [Optional] Uncompress the PDF
 First and foremost, you could *uncompress* the PDF to improve the readability of the text, undoing the flate, ZIP or other PDF compressions. This can be achieved with one of the following commands:
 ```[bash]
 $ qpdf --qdf --object-streams=disable inFile [outFile]
 $ pdftk inFile output outFile uncompress
 ```
-### Identify the watermark object
+#### 🔍 Identify the watermark object
 A PDF object is structured as follows:
 
 ```[pdf]
@@ -69,7 +69,7 @@ In my case, the culprit was the following:
 
 In my experience, if you try to edit the PDF content with text editors like *VSC*, *nano*, *Mousepad* etc..., the file gets corrupted, probably due to the wrong text encoding the editor inferred on a binary file like the PDF. The only text editor I found that doesn't change the file encoding was *Vim*.
 
-### Batch clean multiple PDF files
+#### ✂️ Batch clean multiple PDF files
 
 You could either use `Vim`, `sed` or related tools to manually patch the PDFs, or use a Python script to automate the job.
 
@@ -77,6 +77,6 @@ I have attached two scripts to this repository:
 - [**cleaner.py**](/cleaner.py) - Patch all the PDF files in the CWD. **Before launching the script be sure to have placed the entries for your watermark found in the previous step inside the `watermark_features` list**. This script uses the regular expression `<<[^>]+>>` to identify all the PDF dictionaries, i.e. object arguments, and filter them by keeping only those having all the watermark features.
 - [**unlocker.py**](/unlocker.py) - Unlock all the permission for all the PDF files in the CWD. This requires `pdftk` to work.
 
-### Test the result
+#### 🔥 Test the result
 If you've got this far, you should see some results. However, as in my case, different PDF files had slightly different watermark objects, so I reran the script several times with different `watermark_features` values for those files.
 I also happened to find a file where the watermark object couldn't be removed without corrupting the whole file. What I did was to set the `/Width` property to `0` instead of removing the object.
